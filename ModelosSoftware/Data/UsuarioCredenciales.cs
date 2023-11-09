@@ -2,7 +2,7 @@
 
 namespace ModelosSoftware.Data
 {
-    public class UserDto
+    public class UsuarioCredenciales
     {
         [JsonPropertyName("usuario")]
         public string? Username { get; set; }
