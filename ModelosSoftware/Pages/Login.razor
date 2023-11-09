@@ -1,0 +1,45 @@
+﻿@page "/login"
+@using ModelosSoftware.Data;
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<EditForm Model="@userDto" OnValidSubmit="@HandleLogin">
+    <InputText @bind-Value="userDto.Username" placeholder="Usuario" />
+    <InputText @bind-Value="userDto.Password" placeholder="Contraseña" type="password" />
+    <button type="submit">Iniciar sesión</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <div class="alert alert-info">@mensaje</div>
+}
+
+@code {
+    private UserDto userDto = new UserDto();
+    private string mensaje;
+
+    private async Task HandleLogin()
+    {
+        var apiName = $"api/Usuarios?usuario={userDto.Username}&password={userDto.Password}";
+        try
+        {
+            var apiResponse = await Http.GetFromJsonAsync<User[]>(apiName);
+            if (apiResponse.Length > 0 && apiResponse[0].OBSERVACION.Equals("INGRESO EXITOSO"))
+            {
+                // Login exitoso, redirige o maneja el estado de la sesión aquí
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                // Login fallido, muestra un mensaje de error
+                mensaje = "Credenciales inválidas o usuario no encontrado.";
+            }
+        }
+        catch (HttpRequestException e)
+        {
+            mensaje = $"Error al conectar con la API: {e.Message}";
+            // Manejo de errores de conexión aquí
+        }
+    }
+}
+
