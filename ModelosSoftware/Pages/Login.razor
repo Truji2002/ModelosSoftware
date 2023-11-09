@@ -3,9 +3,9 @@
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 
-<EditForm Model="@userDto" OnValidSubmit="@HandleLogin">
-    <InputText @bind-Value="userDto.Username" placeholder="Usuario" />
-    <InputText @bind-Value="userDto.Password" placeholder="Contraseña" type="password" />
+<EditForm Model="@usuariocredenciales" OnValidSubmit="@HandleLogin">
+    <InputText @bind-Value="usuariocredenciales.Username" placeholder="Usuario" />
+    <InputText @bind-Value="usuariocredenciales.Password" placeholder="Contraseña" type="password" />
     <button type="submit">Iniciar sesión</button>
 </EditForm>
 
@@ -15,15 +15,15 @@
 }
 
 @code {
-    private UserDto userDto = new UserDto();
+    private UsuarioCredenciales usuariocredenciales = new UsuarioCredenciales();
     private string mensaje;
 
     private async Task HandleLogin()
     {
-        var apiName = $"api/Usuarios?usuario={userDto.Username}&password={userDto.Password}";
+        var apiName = $"api/Usuarios?usuario={usuariocredenciales.Username}&password={usuariocredenciales.Password}";
         try
         {
-            var apiResponse = await Http.GetFromJsonAsync<User[]>(apiName);
+            var apiResponse = await Http.GetFromJsonAsync<Usuario[]>(apiName);
             if (apiResponse.Length > 0 && apiResponse[0].OBSERVACION.Equals("INGRESO EXITOSO"))
             {
                 // Login exitoso, redirige o maneja el estado de la sesión aquí
